@@ -39,3 +39,5 @@ flatpaks:
   - com.spotify.Client
   - menu.kando.Kando
   - com.rustdesk.RustDesk
+  - io.missioncenter.MissionCenter
+  - com.teamspeak.TeamSpeak
