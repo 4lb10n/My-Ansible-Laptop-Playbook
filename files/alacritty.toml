@@ -3,7 +3,7 @@ opacity = 0.95
 padding = { x = 10, y = 10 }
 
 [font]
-normal.family = "Hack Font"
+normal.family = "Hack Nerd Font"
 normal.style = "Regular"
 size = 11.0
 
