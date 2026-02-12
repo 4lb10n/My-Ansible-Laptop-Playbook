@@ -1,11 +1,17 @@
 config_files:
-  - src: alacritty.toml
-    dest: /home/{{ user_name }}/.config/alacritty
-  - src: config.kdl
-    dest: /home/{{ user_name }}/.config/zellji
-  - src: fancy.jsonc
-    dest: /home/{{ user_name }}/.config/fastfetch
-  - src: montys.omp.json
+  - src: ./files/alacritty.toml
+    dest: /home/{{ user_name }}/.config/alacritty/
+  - src: ./files/config.kdl
+    dest: /home/{{ user_name }}/.config/zellij/
+  - src: ./files/fancy.jsonc
+    dest: /home/{{ user_name }}/.config/fastfetch/
+  - src: ./files/montys.omp.json
     dest: /home/{{ user_name }}/.config/oh-my-posh
-  - src: .bashrc
+  - src: ./files/.bashrc
     dest: /home/{{ user_name}}/
+
+plasma_config:
+  - src: ./files/plasma-org.kde.plasma.desktop-appletsrc
+    dest: /home/{{ user_name}}/.config/
+  - src:  ./files/plasmashellrc
+    dest: /home/{{ user_name}}/.config/
