@@ -1,0 +1,11 @@
+config_files:
+  - src: alacritty.toml
+    dest: /home/{{ user_name }}/.config/alacritty
+  - src: config.kdl
+    dest: /home/{{ user_name }}/.config/zellji
+  - src: fancy.jsonc
+    dest: /home/{{ user_name }}/.config/fastfetch
+  - src: montys.omp.json
+    dest: /home/{{ user_name }}/.config/oh-my-posh
+  - src: .bashrc
+    dest: /home/{{ user_name}}/
