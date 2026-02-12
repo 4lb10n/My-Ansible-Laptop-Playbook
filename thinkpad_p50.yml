@@ -65,10 +65,12 @@
           become: true
           become_user: "{{ user_name }}"
           community.general.flatpak_remote:
-            name: Flathub
-            state: present
+            enabled: true
+            executable: flatpak
             flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
             method: user
+            name: flathub
+            state: present
 
         - name: Installation von Flatpaks
           become: true
@@ -85,7 +87,8 @@
       tags: DE
       block:
         - name: Wechsel des Default Targets
-          ansible.builtin.command: cmd systemctl set-default graphical.target
+          ansible.builtin.command:
+            cmd: systemctl set-default graphical.target
 
         - name: Wechsel in die GUI
           ansible.builtin.command:
