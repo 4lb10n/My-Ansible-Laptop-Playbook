@@ -96,14 +96,12 @@
 
         - name: Überragen der Konfigurationsdateien für Plasma
           ansible.builtin.copy:
-            src: "{{ item }}"
-            dest: /home/{{ user_name }}/.config
+            src: "{{ item.src }}"
+            dest: "{{ item.dest }}"
             owner: "{{ user_name }}"
             group: "{{ user_name }}"
             mode: u+rw
-          loop:
-            - ./files/plasma-org.kde.plasma.desktop-appletsrc
-            - ./files/plasmashellrc
+          loop: "{{ plasma_config }}"
 
     - name: Terminal Anpassungen
       block:
@@ -165,7 +163,8 @@
             mode: u=rw,go=r
 
         - name: Installation der Hack Fonts
-          ansible.builtin.command: cmd fc-cache -fv
+          ansible.builtin.command:
+            cmd: fc-cache -fv
 
     - name: Konfigurationsdateien Überragen
       block:
@@ -183,12 +182,14 @@
             - zellij
 
         - name: Übertragen der Konfigurationsdateien in Ihre Ordner
+          tags: debug
           ansible.builtin.copy:
             src: "{{ item.src }}"
             dest: "{{ item.dest }}"
             owner: "{{ user_name }}"
             group: "{{ user_name }}"
             mode: u=rw
+            #remote_src: false
           loop: "{{ config_files }}"
 
     - name: Bereinigung
