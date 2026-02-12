@@ -1,0 +1,41 @@
+
+
+corps: 
+  - varlad/zellij
+
+rpms:
+  - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_ver }}.noarch.rpm
+  - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_ver }}.noarch.rpm
+
+rpm_keys:
+  - https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020
+  - https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+  - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+
+dnf_pakete:
+  - zellij
+  - dino
+  - thunderbird
+  - firefox
+  - vim
+  - alacritty
+  - fastfetch
+  - git
+  - unzip
+  - vorta
+  - ntfs-3g
+  - nfs-utils
+  - codium
+  - discord
+  - "@kde-desktop"
+
+flatpaks:
+  - md.obsidian.Obsidian
+  - com.bitwarden.desktop
+  - com.usebottles.bottles
+  - com.github.tchx84.Flatseal
+  - org.telegram.desktop
+  - im.riot.Riot
+  - com.spotify.Client
+  - menu.kando.Kando
+  - com.rustdesk.RustDesk
