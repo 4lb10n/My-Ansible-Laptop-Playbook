@@ -1,0 +1,194 @@
+---
+- name: Fedora Installation auf dem Thinkpad P50
+  remote_user: root
+  hosts: kickdev
+  become: true
+  vars_files:
+    - ./vars/programm_liste.yaml
+    - ./vars/benutzer_konfiguration.yaml
+    - ./vars/config_files.yaml
+
+  tasks:
+    - name: Testen der Verbindung
+      tags: connect_test
+      ansible.builtin.ping:
+
+    - name: Anlegen des Benutzers
+      tags: benutzer_erstellung
+      ansible.builtin.user:
+        append: true
+        create_home: true
+        name: "{{ user_name }}"
+        shell: "{{ user_shell }}"
+        groups: "{{ user_groups }}"
+        password: "{{ user_password }}"
+        update_password: on_create
+
+    - name: Installation von Packeten
+      tags: packet_verwaltungung
+      block:
+        - name: Aktivierung von Corps
+          community.general.copr:
+            host: copr.fedorainfracloud.org
+            state: enabled
+            name: "{{ item }}"
+          loop: "{{ corps }}"
+
+        - name: Import der GPG Schlüssel
+          ansible.builtin.rpm_key:
+            key: "{{ item }}"
+            state: present
+          loop: "{{ rpm_keys }}"
+
+        - name: Überragen der repo Datei für vsCodium
+          ansible.builtin.copy:
+            src: ./files/vscodium.repo
+            dest: /etc/yum.repos.d/
+            mode: u+rw,g+r,o+r
+            owner: root
+            group: root
+
+        - name: Installation der RPM Fusion Repos
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            state: present
+          loop: "{{ rpms }}"
+
+        - name: Installation von packeten mittels DNF
+          ansible.builtin.dnf:
+            update_cache: true
+            name: "{{ item }}"
+            state: present
+          loop: "{{ dnf_pakete }}"
+
+        - name: Flathub als Quelle für Flatpak hinzufügen
+          become: true
+          become_user: "{{ user_name }}"
+          community.general.flatpak_remote:
+            name: Flathub
+            state: present
+            flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+            method: user
+
+        - name: Installation von Flatpaks
+          become: true
+          become_user: "{{ user_name }}"
+          community.general.flatpak:
+            executable: flatpak
+            method: user
+            name: "{{ item }}"
+            remote: flathub
+            state: present
+          loop: "{{ flatpaks }}"
+
+    - name: Einrichtung des Desktops
+      tags: DE
+      block:
+        - name: Wechsel des Default Targets
+          ansible.builtin.command: cmd systemctl set-default graphical.target
+
+        - name: Wechsel in die GUI
+          ansible.builtin.command:
+            cmd: systemctl isolate graphical.target
+
+        - name: Überragen der Konfigurationsdateien für Plasma
+          ansible.builtin.copy:
+            src: "{{ item }}"
+            dest: /home/{{ user_name }}/.config
+            owner: "{{ user_name }}"
+            group: "{{ user_name }}"
+            mode: u+rw
+          loop:
+            - ./files/plasma-org.kde.plasma.desktop-appletsrc
+            - ./files/plasmashellrc
+
+    - name: Terminal Anpassungen
+      block:
+        - name: Erstellung des Temp Ordners
+          ansible.builtin.file:
+            state: directory
+            path: /tmp/install
+            owner: "{{ user_name }}"
+            group: "{{ user_name }}"
+            mode: u=rwx,go=rw
+
+        - name: Download des Oh-My-Posh Installationsscripts
+          ansible.builtin.get_url:
+            url: https://ohmyposh.dev/install.sh
+            dest: /tmp/install/
+            owner: "{{ user_name }}"
+            group: "{{ user_name }}"
+            mode: u=rwx
+
+        - name: Installation von Oh-My-Posh
+          become: true
+          become_user: "{{ user_name }}"
+          ansible.builtin.command:
+            cmd: bash /tmp/install/install.sh
+
+        - name: Download Ordner für Font erstellen
+          tags: Font
+          ansible.builtin.file:
+            path: /tmp/install/font
+            state: directory
+            owner: root
+            group: root
+
+        - name: Downloadordner für Font erstellen
+          tags: Font
+          ansible.builtin.get_url:
+            url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
+            dest: /tmp/install/font/Hack.zip
+            mode: u=rwx
+            owner: root
+            group: root
+
+        - name: Anlegen des Font Ordners
+          tags: Font
+          ansible.builtin.file:
+            path: /usr/share/fonts/hack
+            state: directory
+            mode: u=rwx,g=rx,o=rx
+            owner: root
+            group: root
+
+        - name: Entpacken der Font
+          tags: Font
+          ansible.builtin.unarchive:
+            src: /tmp/install/font/Hack.zip
+            dest: /usr/share/fonts/hack
+            remote_src: true
+            creates: /usr/share/fonts/hack/*
+            mode: u=rw,go=r
+
+        - name: Installation der Hack Fonts
+          ansible.builtin.command: cmd fc-cache -fv
+
+    - name: Konfigurationsdateien Überragen
+      block:
+        - name: Erstellung der Ordner für die Konfigurationsdateien
+          ansible.builtin.file:
+            path: /home/{{ user_name }}/.config/{{ item }}
+            state: directory
+            owner: "{{ user_name }}"
+            group: "{{ user_name }}"
+            mode: u=rwx,g=rw,o=rx
+          loop:
+            - alacritty
+            - oh-my-posh
+            - fastfetch
+            - zellij
+
+        - name: Übertragen der Konfigurationsdateien in Ihre Ordner
+          ansible.builtin.copy:
+            src: "{{ item.src }}"
+            dest: "{{ item.dest }}"
+            owner: "{{ user_name }}"
+            group: "{{ user_name }}"
+            mode: u=rw
+          loop: "{{ config_files }}"
+
+    - name: Bereinigung
+      ansible.builtin.file:
+        state: absent
+        path: /tmp/install/
