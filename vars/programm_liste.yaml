@@ -12,6 +12,12 @@ rpm_keys:
   - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
 
 dnf_pakete:
+  - iwlwifi-mvm-firmware
+  - gwenview
+  - fprintd
+  - libfprint
+  - vlc
+  - NetworkManager-wifi
   - zellij
   - dino
   - thunderbird
@@ -26,6 +32,7 @@ dnf_pakete:
   - nfs-utils
   - codium
   - discord
+  - akmod-nvidia-470xx
   - "@kde-desktop"
 
 flatpaks:
@@ -41,3 +48,4 @@ flatpaks:
   - io.missioncenter.MissionCenter
   - com.teamspeak.TeamSpeak
   - io.github.flattool.Warehouse
+  - com.yubico.yubioath
