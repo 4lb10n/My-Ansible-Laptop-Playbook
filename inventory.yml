@@ -1,6 +1,6 @@
 Laptops:
   hosts:
-    Fedopad:
+    fedopad:
       ansible_host: fedopad.blackwall.lan
       fedora_ver: "{{ansible_distribution_major_version}}"
     kickdev:
