@@ -1,5 +1,4 @@
 
-
 corps: 
   - varlad/zellij
 
@@ -41,3 +40,4 @@ flatpaks:
   - com.rustdesk.RustDesk
   - io.missioncenter.MissionCenter
   - com.teamspeak.TeamSpeak
+  - io.github.flattool.Warehouse
