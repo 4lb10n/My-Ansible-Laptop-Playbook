@@ -1,7 +1,7 @@
 Laptops:
   hosts:
     Fedopad:
-      ansible_host: 192.168.2.
+      ansible_host: 192.168.2.200
       fedora_ver: "{{ansible_distribution_major_version}}"
     kickdev:
       ansible_host: 192.168.2.189
