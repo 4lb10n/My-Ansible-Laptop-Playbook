@@ -1,7 +1,7 @@
 ---
 - name: Fedora-Installation auf dem Thinkpad P50
   remote_user: root
-  hosts: kickdev
+  hosts: fedopad
   become: true
   vars_files:
     - ./vars/programm_liste.yaml
@@ -40,7 +40,7 @@
             state: present
           loop: "{{ rpm_keys }}"
 
-        - name: Übertragen der Repo-Datei 
+        - name: Übertragen der Repo-Datei
           ansible.builtin.copy:
             src: ./files/vscodium.repo
             dest: /etc/yum.repos.d/
