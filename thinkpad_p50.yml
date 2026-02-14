@@ -1,5 +1,5 @@
 ---
-- name: Fedora Installation auf dem Thinkpad P50
+- name: Fedora-Installation auf dem Thinkpad P50
   remote_user: root
   hosts: kickdev
   become: true
@@ -34,13 +34,13 @@
             name: "{{ item }}"
           loop: "{{ corps }}"
 
-        - name: Import der GPG Schlüssel
+        - name: Import der GPG-Schlüssel
           ansible.builtin.rpm_key:
             key: "{{ item }}"
             state: present
           loop: "{{ rpm_keys }}"
 
-        - name: Überragen der repo Datei für vsCodium
+        - name: Übertragen der Repo-Datei 
           ansible.builtin.copy:
             src: ./files/vscodium.repo
             dest: /etc/yum.repos.d/
@@ -54,7 +54,7 @@
             state: present
           loop: "{{ rpms }}"
 
-        - name: Installation von packeten mittels DNF
+        - name: Installation von Paketen mittels DNF
           ansible.builtin.dnf:
             update_cache: true
             name: "{{ item }}"
@@ -105,7 +105,7 @@
 
     - name: Terminal Anpassungen
       block:
-        - name: Erstellung des Temp Ordners
+        - name: Erstellung des Temp-Ordners
           ansible.builtin.file:
             state: directory
             path: /tmp/install
@@ -113,7 +113,7 @@
             group: "{{ user_name }}"
             mode: u=rwx,go=rw
 
-        - name: Download des Oh-My-Posh Installationsscripts
+        - name: Download des Oh-My-Posh-Installationsscripts
           ansible.builtin.get_url:
             url: https://ohmyposh.dev/install.sh
             dest: /tmp/install/
@@ -135,7 +135,7 @@
             owner: root
             group: root
 
-        - name: Downloadordner für Font erstellen
+        - name: Download der Hack Nerd Fonts
           tags: Font
           ansible.builtin.get_url:
             url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
@@ -144,7 +144,7 @@
             owner: root
             group: root
 
-        - name: Anlegen des Font Ordners
+        - name: Anlegen des Font-Ordners
           tags: Font
           ansible.builtin.file:
             path: /usr/share/fonts/hack
@@ -189,7 +189,6 @@
             owner: "{{ user_name }}"
             group: "{{ user_name }}"
             mode: u=rw
-            #remote_src: false
           loop: "{{ config_files }}"
 
     - name: Bereinigung
