@@ -1,5 +1,4 @@
-
-corps: 
+corps:
   - varlad/zellij
 
 rpms:
@@ -34,6 +33,8 @@ dnf_pakete:
   - discord
   - akmod-nvidia-470xx
   - "@kde-desktop"
+  - trayscale
+  - tailscale
 
 flatpaks:
   - md.obsidian.Obsidian
@@ -49,3 +50,7 @@ flatpaks:
   - com.teamspeak.TeamSpeak
   - io.github.flattool.Warehouse
   - com.yubico.yubioath
+  - org.filezillaproject.Filezilla
+  - io.github.shonebinu.Brief
+  - org.signal.Signal
+  - it.mijorus.gearlever
