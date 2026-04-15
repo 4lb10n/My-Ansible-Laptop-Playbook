@@ -35,6 +35,7 @@ dnf_pakete:
   - "@kde-desktop"
   - trayscale
   - tailscale
+  - aria2
 
 flatpaks:
   - md.obsidian.Obsidian
@@ -54,3 +55,4 @@ flatpaks:
   - io.github.shonebinu.Brief
   - org.signal.Signal
   - it.mijorus.gearlever
+  - org.prismlauncher.PrismLauncher
